@@ -16,7 +16,7 @@ def draw(ax, verts, faces=[]):
                                              facecolors='blue',
                                              linewidths=1,
                                              edgecolor='b',
-                                             alpha=0.5))
+                                             alpha=0.25))
 
 def build_projection_matrix(camera, dist=1):
     """
