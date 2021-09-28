@@ -51,7 +51,7 @@ def main():
                        [-1, 1, 0]])
 
     # Transformation Matrix
-    transform = create_rotation_matrix(-np.pi / 3, 'y')
+    transform = create_rotation_matrix(-np.pi / 3, 'z')
     points = points @ transform
 
     faces = [[points[0], points[1], points[2], points[3]]]

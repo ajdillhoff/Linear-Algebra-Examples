@@ -26,7 +26,7 @@ def main():
                        [-1, 1, 0]])
 
     # Transformation Matrix
-    transform = np.eye(3) * 2.0
+    transform = np.eye(3) * 1.0
     points = points @ transform
 
     faces = [[points[0], points[1], points[2], points[3]]]

@@ -31,6 +31,15 @@ def build_projection_matrix(camera, dist=1):
     return proj
 
 
+def draw_camera(ax, camera_pos, view_plane, view_faces):
+    draw(ax, camera_pos)
+    draw(ax, view_plane, view_faces)
+    for i in range(len(view_plane)):
+        ax.plot([camera_pos[0, 0], view_plane[i, 0]],
+                [camera_pos[0, 1], view_plane[i, 1]],
+                [camera_pos[0, 2], view_plane[i, 2]], c='k')
+
+
 def main():
     # Viewing Plane
     view_plane = np.array([[-1, -1, 1],
@@ -59,10 +68,15 @@ def main():
     ax.set_ylim([-2, 2])
     ax.set_zlim([-1, 3])
 
-    draw(ax, camera)
-    draw(ax, view_plane, faces)
+    # Draw camera
+    draw_camera(ax, camera, view_plane, faces)
     draw(ax, point)
     draw(ax, proj_point)
+
+    # Draw line from camera to the 3D point
+    ax.plot([camera[0, 0], point[0, 0]],
+            [camera[0, 1], point[0, 1]],
+            [camera[0, 2], point[0, 2]], c='k')
 
     plt.show()
 
