@@ -72,12 +72,20 @@ def transform_point(point, T):
     return proj_point[:3]
 
 
+def transform_points(points, T):
+    homogeneous_points = np.hstack((points, np.ones((len(points), 1))))
+    proj_points = T @ homogeneous_points.T
+    proj_points /= proj_points[3, :]
+
+    return proj_points[:3, :].T
+
+
 def main():
     # Camera location
-    camera = np.array([0.5, 0.5, 0.5])
+    camera = np.array([0.0, 0.0, 0.0])
 
     # Build camera matrix
-    camera_matrix = look_at(camera, np.array([0, 0, -1]))
+    camera_matrix = look_at(camera, np.array([0.0, 0, -1]))
 
     # Viewing Plane
     view_plane = np.array([[-1, -1, 1],
@@ -91,40 +99,46 @@ def main():
 
     faces = [[view_plane[0], view_plane[1], view_plane[2], view_plane[3]]]
 
-    # Point in 3D space
-    point = np.array([[1.5, 1.5, 3]])
+    # Points in 3D space
+    points = np.array([[0, 1., 3],
+                       [-1, 0, 4],
+                       [1, 0, 4],
+                       [-1, 0, 2],
+                       [1, 0, 2]])
 
     # Get the projection matrix and calculate the projected point.
     proj_matrix = build_projection_matrix()
 
-    fig = plt.figure()
-    ax3d = fig.add_subplot(121, projection='3d')
-    ax2d = fig.add_subplot(122)
+    fig1 = plt.figure()
+    fig2 = plt.figure()
+    ax3d = fig1.add_subplot(111, projection='3d')
+    ax2d = fig2.add_subplot(111)
     ax3d.set_xlim([-2, 2])
     ax3d.set_ylim([-2, 2])
     ax3d.set_zlim([-1, 3])
 
-    point -= camera
-    proj_point = transform_point(point, proj_matrix)
-    proj_point += camera
-    point += camera
+    # points -= camera
+    proj_point = transform_points(points, proj_matrix)
+    # proj_point += camera
+    # points += camera
 
     # Transform to camera space
     T = np.linalg.inv(camera_matrix) @ proj_matrix
-    camera_point = transform_point(point, T)
+    # T = camera_matrix @ proj_matrix
+    # T = proj_matrix @ camera_matrix
+    camera_points = transform_points(points, T)
 
     # Draw camera
     draw_camera(ax3d, camera, view_plane, faces)
-    draw(ax3d, point)
+    draw(ax3d, points)
     draw(ax3d, proj_point)
 
     # Draw line from camera to the 3D point
-    ax3d.plot([camera[0], point[0, 0]],
-              [camera[1], point[0, 1]],
-              [camera[2], point[0, 2]], c='k')
+    # ax3d.plot([camera[0], point[0, 0]],
+              # [camera[1], point[0, 1]],
+              # [camera[2], point[0, 2]], c='k')
 
-    print(camera_point)
-    ax2d.scatter(camera_point[0], camera_point[1])
+    ax2d.scatter(camera_points[:, 0], camera_points[:, 1])
     ax2d.set_xlim([-1, 1])
     ax2d.set_ylim([-1, 1])
 
