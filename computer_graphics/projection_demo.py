@@ -4,15 +4,21 @@ from mpl_toolkits.mplot3d import Axes3D
 from mpl_toolkits.mplot3d.art3d import Poly3DCollection
 
 
-def draw(ax, verts, faces=[]):
+def draw(ax, verts, faces=[], color=[]):
     """
     Draw the object defined by vertices and faces.
     """
 
     if verts.ndim == 1:
-        ax.scatter3D(verts[0], verts[1], verts[2])
+        if color:
+            ax.scatter3D(verts[0], verts[1], verts[2], c=color)
+        else:
+            ax.scatter3D(verts[0], verts[1], verts[2], c=color)
     else:
-        ax.scatter3D(verts[:, 0], verts[:, 1], verts[:, 2])
+        if color:
+            ax.scatter3D(verts[:, 0], verts[:, 1], verts[:, 2], c=color)
+        else:
+            ax.scatter3D(verts[:, 0], verts[:, 1], verts[:, 2])
 
     if faces:
         ax.add_collection3d(Poly3DCollection(faces,
@@ -138,7 +144,7 @@ def main():
               # [camera[1], point[0, 1]],
               # [camera[2], point[0, 2]], c='k')
 
-    ax2d.scatter(camera_points[:, 0], camera_points[:, 1])
+    ax2d.scatter(camera_points[:, 0], camera_points[:, 1], c=points[:, 2])
     ax2d.set_xlim([-1, 1])
     ax2d.set_ylim([-1, 1])
 
