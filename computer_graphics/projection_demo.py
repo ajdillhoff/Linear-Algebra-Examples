@@ -34,8 +34,8 @@ def build_projection_matrix(near=1):
     """
     proj = np.array([[1, 0, 0, 0],
                      [0, 1, 0, 0],
-                     [0, 0, 1, 0],
-                     [0, 0, 1/near, 0]])
+                     [0, 0, -1, 0],
+                     [0, 0, -1/near, 0]])
 
     return proj
 
@@ -88,10 +88,10 @@ def transform_points(points, T):
 
 def main():
     # Camera location
-    camera = np.array([0.0, 0.0, 0.0])
+    camera = np.array([0.0, 0.0, -1.0])
 
     # Build camera matrix
-    camera_matrix = look_at(camera, np.array([0.0, 0, -1]))
+    camera_matrix = look_at(camera, np.array([0.0, 0.0, 0.0]))
 
     # Viewing Plane
     view_plane = np.array([[-1, -1, 1],
@@ -106,11 +106,16 @@ def main():
     faces = [[view_plane[0], view_plane[1], view_plane[2], view_plane[3]]]
 
     # Points in 3D space
-    points = np.array([[0, 1., 3],
-                       [-1, 0, 4],
-                       [1, 0, 4],
-                       [-1, 0, 2],
-                       [1, 0, 2]])
+    # points = np.array([[0, 1., 3],
+                       # [-1, 0, 4],
+                       # [1, 0, 4],
+                       # [-1, 0, 2],
+                       # [1, 0, 2]])
+    points = np.array([[0, 1., -4],
+                       [0, 0, -3],
+                       [-1, 0, -4],
+                       [0, 0, -5],
+                       [1, 0, -4]])
 
     # Get the projection matrix and calculate the projected point.
     proj_matrix = build_projection_matrix()
@@ -125,6 +130,7 @@ def main():
 
     # points -= camera
     proj_point = transform_points(points, proj_matrix)
+    print(proj_point)
     # proj_point += camera
     # points += camera
 
