@@ -126,10 +126,10 @@ def main():
     ax2d = fig2.add_subplot(111)
     ax3d.set_xlim([-2, 2])
     ax3d.set_ylim([-2, 2])
-    ax3d.set_zlim([-1, 3])
+    ax3d.set_zlim([-4, 0])
 
     # points -= camera
-    proj_point = transform_points(points, proj_matrix)
+    proj_point = transform_points(points, camera_matrix @ proj_matrix)
     print(proj_point)
     # proj_point += camera
     # points += camera
@@ -146,9 +146,10 @@ def main():
     draw(ax3d, proj_point)
 
     # Draw line from camera to the 3D point
-    # ax3d.plot([camera[0], point[0, 0]],
-              # [camera[1], point[0, 1]],
-              # [camera[2], point[0, 2]], c='k')
+    for i in range(points.shape[0]):
+        ax3d.plot([camera[0], points[i, 0]],
+                  [camera[1], points[i, 1]],
+                  [camera[2], points[i, 2]], c='r')
 
     ax2d.scatter(camera_points[:, 0], camera_points[:, 1], c=points[:, 2])
     ax2d.set_xlim([-1, 1])
