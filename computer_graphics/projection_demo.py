@@ -34,8 +34,8 @@ def build_projection_matrix(near=1):
     """
     proj = np.array([[1, 0, 0, 0],
                      [0, 1, 0, 0],
-                     [0, 0, -1, 0],
-                     [0, 0, -1/near, 0]])
+                     [0, 0, 1, 0],
+                     [0, 0, 1/near, 0]])
 
     return proj
 
@@ -62,7 +62,7 @@ def look_at(src, to, up):
     right = np.cross(normalize(up), forward)
     up = np.cross(forward, right)
 
-    # forward = -forward
+    forward = -forward
 
     camera_matrix = np.array([
         [right[0], right[1], right[2], -np.dot(right, src)],
@@ -91,7 +91,7 @@ def transform_points(points, T):
 
 def main():
     # Camera location
-    camera = np.array([0.0, 0.0, 0.0])
+    camera = np.array([0.2, 0.5, 0.0])
     at = np.array([1.0, 0.0, 0.0])
     up = np.array([0.0, 0.0, 1.0])
 
@@ -105,8 +105,7 @@ def main():
                            [-1, 1, 1]])
 
     # Transform viewing plane to match camera
-    view_plane = camera_matrix @ np.vstack((view_plane.T, np.ones(4)))
-    view_plane = view_plane[:3].T
+    view_plane = transform_points(view_plane, np.linalg.inv(camera_matrix))
 
     faces = [[view_plane[0], view_plane[1], view_plane[2], view_plane[3]]]
 
@@ -131,7 +130,7 @@ def main():
     ax3d.set_ylabel("Y")
     ax3d.set_zlabel("Z")
 
-    proj_point = transform_points(points, proj_matrix @ camera_matrix)
+    proj_point = transform_points(points, np.linalg.inv(camera_matrix) @ proj_matrix @ camera_matrix)
 
     # Transform to camera space
     T = proj_matrix @ camera_matrix
