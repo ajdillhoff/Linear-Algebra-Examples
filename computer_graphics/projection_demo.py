@@ -56,17 +56,20 @@ def normalize(v):
     return v / norm
 
 
-def look_at(src, to):
+def look_at(src, to, up):
     """Creates a camera matrix located at `src` looking towards `to`."""
     forward = normalize(src - to)
-    right = np.cross(np.array([0, 1, 0]), forward)
+    right = np.cross(normalize(up), forward)
     up = np.cross(forward, right)
 
-    camera_matrix = np.eye(4)
-    camera_matrix[:3, 0] = right
-    camera_matrix[:3, 1] = up
-    camera_matrix[:3, 2] = forward
-    camera_matrix[:3, 3] = src
+    # forward = -forward
+
+    camera_matrix = np.array([
+        [right[0], right[1], right[2], -np.dot(right, src)],
+        [up[0], up[1], up[2], -np.dot(up, src)],
+        [forward[0], forward[1], forward[2], -np.dot(forward, src)],
+        [0, 0, 0, 1]
+    ])
 
     return camera_matrix
 
@@ -88,10 +91,12 @@ def transform_points(points, T):
 
 def main():
     # Camera location
-    camera = np.array([0.0, 0.0, -1.0])
+    camera = np.array([0.0, 0.0, 0.0])
+    at = np.array([1.0, 0.0, 0.0])
+    up = np.array([0.0, 0.0, 1.0])
 
     # Build camera matrix
-    camera_matrix = look_at(camera, np.array([0.0, 0.0, 0.0]))
+    camera_matrix = look_at(camera, at, up)
 
     # Viewing Plane
     view_plane = np.array([[-1, -1, 1],
@@ -106,16 +111,11 @@ def main():
     faces = [[view_plane[0], view_plane[1], view_plane[2], view_plane[3]]]
 
     # Points in 3D space
-    # points = np.array([[0, 1., 3],
-                       # [-1, 0, 4],
-                       # [1, 0, 4],
-                       # [-1, 0, 2],
-                       # [1, 0, 2]])
-    points = np.array([[0, 1., -4],
-                       [0, 0, -3],
-                       [-1, 0, -4],
-                       [0, 0, -5],
-                       [1, 0, -4]])
+    points = np.array([[4, 0., 1],
+                       [3, 0, 0],
+                       [4, -1, 0],
+                       [5, 0, 0],
+                       [4, 1, 0]])
 
     # Get the projection matrix and calculate the projected point.
     proj_matrix = build_projection_matrix()
@@ -124,20 +124,17 @@ def main():
     fig2 = plt.figure()
     ax3d = fig1.add_subplot(111, projection='3d')
     ax2d = fig2.add_subplot(111)
-    ax3d.set_xlim([-2, 2])
+    ax3d.set_xlim([0, 4])
     ax3d.set_ylim([-2, 2])
-    ax3d.set_zlim([-4, 0])
+    ax3d.set_zlim([-2, 2])
+    ax3d.set_xlabel("X")
+    ax3d.set_ylabel("Y")
+    ax3d.set_zlabel("Z")
 
-    # points -= camera
-    proj_point = transform_points(points, camera_matrix @ proj_matrix)
-    print(proj_point)
-    # proj_point += camera
-    # points += camera
+    proj_point = transform_points(points, proj_matrix @ camera_matrix)
 
     # Transform to camera space
-    T = np.linalg.inv(camera_matrix) @ proj_matrix
-    # T = camera_matrix @ proj_matrix
-    # T = proj_matrix @ camera_matrix
+    T = proj_matrix @ camera_matrix
     camera_points = transform_points(points, T)
 
     # Draw camera
