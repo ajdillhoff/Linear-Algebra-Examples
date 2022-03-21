@@ -34,8 +34,8 @@ def build_projection_matrix(near=1):
     """
     proj = np.array([[1, 0, 0, 0],
                      [0, 1, 0, 0],
-                     [0, 0, 1, 0],
-                     [0, 0, 1/near, 0]])
+                     [0, 0, 1/near, 0],
+                     [0, 0, 1, 0]])
 
     return proj
 
