@@ -91,8 +91,8 @@ def transform_points(points, T):
 
 def main():
     # Camera location
-    camera = np.array([0.2, 0.5, 0.0])
-    at = np.array([1.0, 0.0, 0.0])
+    camera = np.array([0.2, 0.5, 0.1])
+    at = np.array([1.6, 0.0, 0.0])
     up = np.array([0.0, 0.0, 1.0])
 
     # Build camera matrix
@@ -130,6 +130,7 @@ def main():
     ax3d.set_ylabel("Y")
     ax3d.set_zlabel("Z")
 
+    # Points as projected on the viewing plane
     proj_point = transform_points(points, np.linalg.inv(camera_matrix) @ proj_matrix @ camera_matrix)
 
     # Transform to camera space
