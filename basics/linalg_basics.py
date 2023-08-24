@@ -2,7 +2,7 @@ import numpy as np
 import scipy.linalg as linalg
 
 # Create a random 4x4 matrix
-A = np.random.randint(-9, 9, (3, 3))
+A = np.random.randint(-9, 9, (4, 4))
 print('Matrix A\n', A)
 
 # Compute the determinant of A
@@ -23,7 +23,7 @@ nullA = linalg.null_space(A)
 print('Null space\n', nullA)
 
 # Solve the matrix equation Ax=b
-b = np.random.randint(-9, 9, (3, 1))
+b = np.random.randint(-9, 9, (4, 1))
 print('b vector\n', b)
 
 x = linalg.solve(A, b)

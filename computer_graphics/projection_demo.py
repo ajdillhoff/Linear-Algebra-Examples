@@ -91,8 +91,8 @@ def transform_points(points, T):
 
 def main():
     # Camera location
-    camera = np.array([0.2, 0.5, 0.1])
-    at = np.array([1.6, 0.0, 0.0])
+    camera = np.array([0.0, 0.0, 0.0])
+    at = np.array([2.0, 1.0, 0.0])
     up = np.array([0.0, 0.0, 1.0])
 
     # Build camera matrix

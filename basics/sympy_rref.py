@@ -3,6 +3,7 @@ import sympy
 
 # Create a random matrix A
 A = np.random.randint(-9, 9, (3, 3))
+A[:, 2] = A[:, 0]
 print('A =\n', A)
 
 # Convert the numpy array to the sympy.Matrix class
